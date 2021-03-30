@@ -4,7 +4,7 @@ version: 3.0.0
 homepage: https://github.com/deependra227/multi-sort
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
   flutter: ">=1.17.0 <2.0.0"
 
 dependencies:
@@ -14,6 +14,7 @@ dependencies:
   font_awesome_flutter: ^9.0.0
 
 dev_dependencies:
+  matcher: ^0.12.10
   flutter_test:
     sdk: flutter
 

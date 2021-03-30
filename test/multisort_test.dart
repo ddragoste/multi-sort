@@ -1,10 +1,11 @@
 //flutter test --plain-name=LessonSplitter
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:multi_sort/common.dart';
 import 'package:multi_sort/multi_sort.dart';
 
 /// Class of Items
-class Items implements Sortable {
+class Items implements SortFilterable {
   String name;
   int ram;
   Items(this.name, this.ram);
@@ -12,10 +13,13 @@ class Items implements Sortable {
   String toString() => //
       "name: ${this.name}, ram: ${this.ram}";
 
-  Map<String, Comparable> sortableFields() => //
+  static const $name = 'name';
+  static const $ram = 'ram';
+
+  Map<String, Comparable> sortFilterFields() => //
       {
-        'name': name,
-        'ram': ram,
+        $name: name,
+        $ram: ram,
       };
 }
 

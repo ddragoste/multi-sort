@@ -10,30 +10,22 @@ class SortableButton extends StatelessWidget {
   final List<SortField> sortedFields;
 
   /// This field
-  final SortField field;
+  final String fieldName;
 
   /// The text for the button label
-  final String text;
+  final String? buttonText;
 
-  /// A callback to set the altered sortedFields list
-  ///
-  /// '''void setSortedFields(List<SortField> sortedFields) {
-  //    setState(() {
-  //      this.sortedFields = sortedFields;
-  //      this.data = data.multisort(sortedFields);
-  //    });
-  //  }'''
   final void Function(List<SortField>) onPressed;
 
-  SortableButton(this.sortedFields, this.field, this.onPressed, {this.text});
+  SortableButton(this.sortedFields, this.fieldName, this.onPressed, {this.buttonText});
 
   Widget build(BuildContext context) {
-    SortField thisSortedField;
-    int index;
+    SortField? thisSortedField;
+    int? index;
 
     sortedFields.forEachIndexed((e, i) {
-      if (e.fieldName == field.fieldName) {
-        index = i;
+      if (e.fieldName == fieldName) {
+        index = i + 1;
         thisSortedField = e;
       }
     });
@@ -43,12 +35,12 @@ class SortableButton extends StatelessWidget {
         var newSortedFields = <SortField>[];
 
         if (thisSortedField == null) //
-          newSortedFields = [...sortedFields, field];
+          newSortedFields = [...sortedFields, SortField(fieldName)];
         else {
-          if (thisSortedField.isAscending) //
-            newSortedFields = sortedFields.map((e) => e.fieldName != thisSortedField.fieldName ? e : SortField(e.fieldName, isAscending: false)).toList();
+          if (thisSortedField!.isAscending) //
+            newSortedFields = sortedFields.map((e) => e.fieldName != thisSortedField!.fieldName ? e : SortField(e.fieldName, isAscending: false)).toList();
           else
-            newSortedFields = sortedFields.where((e) => e.fieldName != thisSortedField.fieldName).toList();
+            newSortedFields = sortedFields.where((e) => e.fieldName != thisSortedField!.fieldName).toList();
         }
 
         onPressed(newSortedFields);
@@ -58,7 +50,7 @@ class SortableButton extends StatelessWidget {
           if (thisSortedField != null) //
             ...[
             Icon(
-              thisSortedField.isAscending ? FontAwesomeIcons.angleUp : FontAwesomeIcons.angleDown,
+              thisSortedField!.isAscending ? FontAwesomeIcons.angleUp : FontAwesomeIcons.angleDown,
               size: 15,
             ),
             Text(
@@ -66,7 +58,7 @@ class SortableButton extends StatelessWidget {
               textScaleFactor: 0.6,
             ),
           ],
-          Text(this.text ?? field.fieldName),
+          Text(this.buttonText ?? fieldName),
         ],
       ),
     );
