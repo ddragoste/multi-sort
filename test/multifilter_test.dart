@@ -1,7 +1,6 @@
 //flutter test --plain-name=LessonSplitter
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:matcher/matcher.dart';
 import 'package:multi_sort/common.dart';
 import 'package:multi_sort/multi_filter.dart';
 

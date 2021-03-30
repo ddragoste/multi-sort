@@ -2,6 +2,7 @@ name: multi_sort
 description: A fast and powerful Flutter package helps you sort a list of objects by one or more properties at the same time.
 version: 3.0.0
 homepage: https://github.com/deependra227/multi-sort
+publish_to: none
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
@@ -12,11 +13,17 @@ dependencies:
     sdk: flutter
   dartx: ^0.6.0
   font_awesome_flutter: ^9.0.0
+  atreeon_flutter_reuse:
+    path: ../atreeon_flutter_reuse
 
 dev_dependencies:
   matcher: ^0.12.10
   flutter_test:
     sdk: flutter
+
+#  atreeon_flutter_reuse:
+##    path: ../atreeon_flutter_reuse/
+#    git: https://github.com/atreeon/atreeon_flutter_reuse.git
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
