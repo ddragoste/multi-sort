@@ -91,16 +91,6 @@ class _ResusableDatagridState<TData extends SortFilterable> extends State<Resusa
                   headingRowHeight: showFilter ? 77 : 45,
                   rowsPerPage: rowsPerPage,
                   columns: [
-                    ...widget.fields
-                        .map((e) => DataColumn(
-                              label: SortableFilterable(
-                                container,
-                                e.fieldName,
-                                e.dataType,
-                                buttonText: e.columnName,
-                              ),
-                            ))
-                        .toList(),
                     DataColumn(
                       label: InkWell(
                         child: Icon(
@@ -111,6 +101,16 @@ class _ResusableDatagridState<TData extends SortFilterable> extends State<Resusa
                         onTap: container.onShowFilter,
                       ),
                     ),
+                    ...widget.fields
+                        .map((e) => DataColumn(
+                              label: SortableFilterable(
+                                container,
+                                e.fieldName,
+                                e.dataType,
+                                buttonText: e.columnName,
+                              ),
+                            ))
+                        .toList(),
                   ],
                 ),
               ),
@@ -130,12 +130,12 @@ class DTS<TData extends SortFilterable> extends DataTableSource {
     return DataRow.byIndex(
       index: i,
       cells: [
+        DataCell(Text('')),
         ...fields
             .map(
               (e) => DataCell(Text(getField(e.fieldName, data[i]).toString())),
             )
             .toList(),
-        DataCell(Text('')),
       ],
     );
   }
