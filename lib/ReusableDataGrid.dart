@@ -14,8 +14,8 @@ class ReusableDatagridFieldDefinition {
 
   ReusableDatagridFieldDefinition({
     required this.fieldName,
-    required this.columnName,
     required this.dataType,
+    this.columnName,
   });
 }
 
