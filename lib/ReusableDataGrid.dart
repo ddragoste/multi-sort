@@ -1,6 +1,7 @@
 import 'package:atreeon_flutter_reuse/MeasureSize.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'FilterBox.dart';
 import 'SortableFilterableContainer.dart';
 import 'common.dart';
@@ -19,18 +20,24 @@ class ReusableDatagridFieldDefinition {
   });
 }
 
-class ResusableDatagrid<TData extends SortFilterable> extends StatefulWidget {
-  final List<TData> data;
+class ResusableDatagridW<T> extends StatefulWidget {
+  final List<T> data;
   final List<ReusableDatagridFieldDefinition> fields;
+  final SortFilterFields_fn<T> itemSortFilterFields;
   final int rowHeight;
 
-  const ResusableDatagrid({Key? key, required this.data, required this.fields, this.rowHeight = 30}) : super(key: key);
-
-  _ResusableDatagridState createState() => _ResusableDatagridState();
+  ResusableDatagridW({
+    Key? key,
+    required this.data,
+    required this.fields,
+    required this.itemSortFilterFields,
+    this.rowHeight = 30,
+  }) : super(key: key);
+  _ResusableDatagridW<T> createState() => _ResusableDatagridW();
 }
 
-class _ResusableDatagridState<TData extends SortFilterable> extends State<ResusableDatagrid<TData>> {
-  late List<SortFilterable> data;
+class _ResusableDatagridW<T> extends State<ResusableDatagridW<T>> {
+  late Iterable<SortFilterableItem<T>> data;
   var sortedFields = <SortField>[];
   var filteredFields = <FilterField>[];
   var showFilter = false;
@@ -40,7 +47,7 @@ class _ResusableDatagridState<TData extends SortFilterable> extends State<Resusa
   var widgetSize = Size(100, 100);
 
   void initState() {
-    data = widget.data;
+    data = widget.data.map((e) => SortFilterableItem<T>(e, widget.itemSortFilterFields));
     rowHeight = widget.rowHeight;
     super.initState();
   }
@@ -48,14 +55,16 @@ class _ResusableDatagridState<TData extends SortFilterable> extends State<Resusa
   void setSortedFields(List<SortField> sortedFields) {
     setState(() {
       this.sortedFields = sortedFields;
-      this.data = widget.data.multiFilter(filteredFields).multisort(sortedFields);
+      data = widget.data.map((e) => //
+          SortFilterableItem(e, widget.itemSortFilterFields)).multiFilter(filteredFields).multisort(sortedFields);
     });
   }
 
   void setFilteredFields(List<FilterField> filteredFields) {
     setState(() {
       this.filteredFields = filteredFields;
-      this.data = widget.data.multisort(sortedFields).multiFilter(filteredFields);
+      data = widget.data.map((e) => //
+          SortFilterableItem(e, widget.itemSortFilterFields)).multiFilter(filteredFields).multisort(sortedFields);
     });
   }
 
@@ -87,7 +96,7 @@ class _ResusableDatagridState<TData extends SortFilterable> extends State<Resusa
                 },
                 child: PaginatedDataTable(
                   dataRowHeight: rowHeight.toDouble(),
-                  source: DTS(data, widget.fields),
+                  source: DTS(data.toList(), widget.fields),
                   headingRowHeight: showFilter ? 77 : 45,
                   rowsPerPage: rowsPerPage,
                   columns: [
@@ -120,8 +129,8 @@ class _ResusableDatagridState<TData extends SortFilterable> extends State<Resusa
   }
 }
 
-class DTS<TData extends SortFilterable> extends DataTableSource {
-  final List<TData> data;
+class DTS<TData> extends DataTableSource {
+  final List<SortFilterableItem<TData>> data;
   final List<ReusableDatagridFieldDefinition> fields;
 
   DTS(this.data, this.fields);
@@ -133,7 +142,7 @@ class DTS<TData extends SortFilterable> extends DataTableSource {
         DataCell(Text('')),
         ...fields
             .map(
-              (e) => DataCell(Text(getField(e.fieldName, data[i]).toString())),
+              (e) => DataCell(Text(data[i].getField(e.fieldName).toString())),
             )
             .toList(),
       ],

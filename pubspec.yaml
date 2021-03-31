@@ -15,7 +15,7 @@ dependencies:
   font_awesome_flutter: ^9.0.0
   atreeon_flutter_reuse:
     git: https://github.com/atreeon/atreeon_flutter_reuse.git
-
+  adi_helpers: ^1.0.7-nullsafety2
 
 dev_dependencies:
   matcher: ^0.12.10

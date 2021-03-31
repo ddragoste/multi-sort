@@ -4,53 +4,43 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:multi_sort/common.dart';
 import 'package:multi_sort/multi_sort.dart';
 
-/// Class of Items
-class Items implements SortFilterable {
-  String name;
-  int ram;
-  Items(this.name, this.ram);
+// Class of Phone
+class Phone {
+  final String name;
+  final int ram;
+
+  Phone(this.name, this.ram);
 
   String toString() => //
       "name: ${this.name}, ram: ${this.ram}";
-
-  static const $name = 'name';
-  static const $ram = 'ram';
-
-  Map<String, Comparable> sortFilterFields() => //
-      {
-        $name: name,
-        $ram: ram,
-      };
 }
+
+Map<String, Comparable?> itemSortFilterFields(Phone phone) => {
+      'name': phone.name,
+      'ram': phone.ram,
+    };
 
 void main() {
   group("multiSort", () {
-//    List<Items> unsorted;
+//    List<Phone> unsorted;
 
-    var unsorted = [
-      Items("b", 1),
-      Items("b", 128),
-      Items("a", 64),
+    var originalList = [
+      Phone("b", 1),
+      Phone("b", 128),
+      Phone("a", 64),
     ];
-
-//    setUp(() {
-//      unsorted = [
-//        Items("b", 1),
-//        Items("b", 128),
-//        Items("a", 64),
-//      ];
-//    });
+    var list = originalList.map((e) => SortFilterableItem(e, itemSortFilterFields));
 
     test("two asc", () {
       var sortedFields = [
         SortField('ram'),
         SortField('name'),
       ];
-      var sorted = unsorted.multisort(sortedFields);
+      var sorted = list.multisort(sortedFields).toList();
       var expected = [
-        Items("b", 1),
-        Items("a", 64),
-        Items("b", 128),
+        Phone("b", 1),
+        Phone("a", 64),
+        Phone("b", 128),
       ];
 
       expect(sorted.toString(), expected.toString());
@@ -61,11 +51,11 @@ void main() {
         SortField('name'),
         SortField('ram', isAscending: false),
       ];
-      var sorted = unsorted.multisort(sortedFields);
+      var sorted = list.multisort(sortedFields).toList();
       var expected = [
-        Items("a", 64),
-        Items("b", 128),
-        Items("b", 1),
+        Phone("a", 64),
+        Phone("b", 128),
+        Phone("b", 1),
       ];
 
       expect(sorted.toString(), expected.toString());
@@ -73,11 +63,11 @@ void main() {
 
     test("sort set to null", () {
       var sortedFields = <SortField>[];
-      var sorted = unsorted.multisort(sortedFields);
+      var sorted = list.multisort(sortedFields).toList();
       var expected = [
-        Items("b", 1),
-        Items("b", 128),
-        Items("a", 64),
+        Phone("b", 1),
+        Phone("b", 128),
+        Phone("a", 64),
       ];
 
       expect(sorted.toString(), expected.toString());

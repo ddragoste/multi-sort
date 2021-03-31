@@ -1,16 +1,27 @@
-///get function to get the properties of Item
-Comparable? getField(String propertyName, SortFilterable sortable) {
-  var _mapRep = sortable.sortFilterFields();
-  var result = _mapRep[propertyName];
+/////get function to get the properties of Item
+//Comparable? getField(String propertyName, SortFilterable sortable) {
+//  var _mapRep = sortable.sortFilterFields();
+//  var result = _mapRep[propertyName];
+//
+//  return result;
+//}
 
-  return result;
-}
+typedef SortFilterFields_fn<T> = Map<String, Comparable?> Function(T);
 
-abstract class SortFilterable {
-  ///A list of strings and their textual ids eg
-  ///
-  /// {'name': name, 'price': price, 'ram': ram, 'storage': storage};
-  Map<String, Comparable?> sortFilterFields();
+class SortFilterableItem<T> {
+  final T item;
+  final SortFilterFields_fn<T> sortFilterFields;
+
+  SortFilterableItem(this.item, this.sortFilterFields);
+
+  Comparable? getField(String propertyName) {
+    var _mapRep = sortFilterFields(this.item);
+    var result = _mapRep[propertyName];
+
+    return result;
+  }
+
+  String toString() => item.toString();
 }
 
 class DataTypeNotSupportedException implements Exception {

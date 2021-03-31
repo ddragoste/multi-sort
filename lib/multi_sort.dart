@@ -9,14 +9,14 @@ class SortField {
   SortField(this.fieldName, {this.isAscending = true});
 }
 
-extension MultiSort on List<SortFilterable> {
-  List<SortFilterable> multisort(List<SortField> sortedFields) {
+extension MultiSort<T> on Iterable<SortFilterableItem<T>> {
+  Iterable<SortFilterableItem<T>> multisort(List<SortField> sortedFields) {
     if (sortedFields.length == 0) //
       return this;
 
-    int compare(int i, SortFilterable a, SortFilterable b) {
-      var valueA = getField(sortedFields[i].fieldName, a);
-      var valueB = getField(sortedFields[i].fieldName, b);
+    int compare(int i, SortFilterableItem<T> a, SortFilterableItem<T> b) {
+      var valueA = a.getField(sortedFields[i].fieldName);
+      var valueB = b.getField(sortedFields[i].fieldName);
 
       if (valueA == null) //
         return -1;

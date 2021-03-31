@@ -29,8 +29,9 @@ class FilterFieldNum implements FilterField {
   });
 }
 
-extension MultiFilter on List<SortFilterable> {
-  List<SortFilterable> multiFilter(List<FilterField> filteredFields) {
+//extension MultiFilter on List<SortFilterable> {
+extension MultiSort<T> on Iterable<SortFilterableItem<T>> {
+  Iterable<SortFilterableItem<T>> multiFilter(List<FilterField> filteredFields) {
     if (filteredFields.length == 0) //
       return this;
 
@@ -39,7 +40,7 @@ extension MultiFilter on List<SortFilterable> {
 
       for (var i = 0; i < filteredFields.length; ++i) {
         var filteredField = filteredFields[i];
-        var value = getField(filteredField.fieldName, item);
+        var value = item.getField(filteredField.fieldName);
 
         //can't filter for nulls
         if (value == null) //
@@ -57,23 +58,6 @@ extension MultiFilter on List<SortFilterable> {
             result = (value >= from && value <= to) && result;
           }
         }
-
-//        if (value is String) {
-//          var filteredFieldStr = filteredField as FilterFieldString;
-//          if (filteredFieldStr.searchText == null) //
-//            return true;
-//          return value.contains(filteredFieldStr.searchText!);
-//        }
-//
-//        if (value is num) {
-//          var filteredFieldNum = (filteredField as FilterFieldNum);
-//
-//          var from = filteredFieldNum.from ?? -2e53;
-//          var to = filteredFieldNum.to ?? 2e53;
-//
-//          return value >= from && value <= to;
-//        }
-//        throw DataTypeNotSupportedException(value.runtimeType.toString());
       }
 
       return result;

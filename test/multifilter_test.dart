@@ -12,47 +12,42 @@ class Unsupported implements Comparable<dynamic> {
 }
 
 /// Class of Items
-class Items implements SortFilterable {
+class Phone {
   final String name;
   final int ram;
   final double? cost;
   final Unsupported? unsupported;
 
-  Items(this.name, this.ram, {this.unsupported, this.cost});
+  Phone(this.name, this.ram, {this.unsupported, this.cost});
 
   String toString() => //
       "name: ${this.name}, ram: ${this.ram}, unsupported: ${this.unsupported}, cost: ${this.cost} ";
-
-  static const $name = 'name';
-  static const $ram = 'ram';
-  static const $unsupported = 'unsupported';
-  static const $cost = 'cost';
-
-  Map<String, Comparable?> sortFilterFields() => //
-      {
-        'name': name,
-        'ram': ram,
-        'unsupported': unsupported,
-        'cost': cost,
-      };
 }
+
+Map<String, Comparable?> itemSortFilterFields(Phone phone) => {
+      'name': phone.name,
+      'ram': phone.ram,
+      'unsupported': phone.unsupported,
+      'cost': phone.cost,
+    };
 
 void main() {
   group("filterSort", () {
-    var unsorted = [
-      Items("Adrian", 1),
-      Items("Bob", 128),
-      Items("Andrew", 64, cost: 5000),
+    var originalList = [
+      Phone("Adrian", 1),
+      Phone("Bob", 128),
+      Phone("Andrew", 64, cost: 5000),
     ];
+    var list = originalList.map((e) => SortFilterableItem(e, itemSortFilterFields));
 
     test("1 filter by text", () {
       var filterFields = [
         FilterFieldString(fieldName: 'name', searchText: 'A'),
       ];
-      var sorted = unsorted.multiFilter(filterFields);
+      var sorted = list.multiFilter(filterFields);
       var expected = [
-        Items("Adrian", 1),
-        Items("Andrew", 64, cost: 5000),
+        Phone("Adrian", 1),
+        Phone("Andrew", 64, cost: 5000),
       ];
 
       expect(sorted.toString(), expected.toString());
@@ -69,10 +64,10 @@ void main() {
       var filterFields = [
         FilterFieldNum(fieldName: 'ram', from: 63, to: null),
       ];
-      var sorted = unsorted.multiFilter(filterFields);
+      var sorted = list.multiFilter(filterFields);
       var expected = [
-        Items("Bob", 128),
-        Items("Andrew", 64, cost: 5000),
+        Phone("Bob", 128),
+        Phone("Andrew", 64, cost: 5000),
       ];
 
       expect(sorted.toString(), expected.toString());
@@ -82,9 +77,9 @@ void main() {
       var filterFields = [
         FilterFieldNum(fieldName: 'cost', from: 2000, to: null),
       ];
-      var sorted = unsorted.multiFilter(filterFields);
+      var sorted = list.multiFilter(filterFields);
       var expected = [
-        Items("Andrew", 64, cost: 5000),
+        Phone("Andrew", 64, cost: 5000),
       ];
 
       expect(sorted.toString(), expected.toString());
@@ -94,11 +89,11 @@ void main() {
       var filterFields = [
         FilterFieldString(fieldName: 'name', searchText: null),
       ];
-      var sorted = unsorted.multiFilter(filterFields);
+      var sorted = list.multiFilter(filterFields);
       var expected = [
-        Items("Adrian", 1),
-        Items("Bob", 128),
-        Items("Andrew", 64, cost: 5000),
+        Phone("Adrian", 1),
+        Phone("Bob", 128),
+        Phone("Andrew", 64, cost: 5000),
       ];
 
       expect(sorted.toString(), expected.toString());
@@ -109,9 +104,9 @@ void main() {
         FilterFieldString(fieldName: 'name', searchText: "A"),
         FilterFieldNum(fieldName: 'ram', from: null, to: 5),
       ];
-      var sorted = unsorted.multiFilter(filterFields);
+      var sorted = list.multiFilter(filterFields);
       var expected = [
-        Items("Adrian", 1),
+        Phone("Adrian", 1),
 //        Items("Bob", 128),
 //        Items("Andrew", 64, cost: 5000),
       ];
