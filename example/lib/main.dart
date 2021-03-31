@@ -48,15 +48,26 @@ var originalData = [
 
 class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
-    return ResusableDatagridW(
-      data: originalData,
-      fields: [
-        ReusableDatagridFieldDefinition(fieldName: string(Item$.name), columnName: "Name", dataType: FilterDataType.string),
-        ReusableDatagridFieldDefinition(fieldName: string(Item$.price), columnName: null, dataType: FilterDataType.number),
-        ReusableDatagridFieldDefinition(fieldName: string(Item$.ram), columnName: null, dataType: FilterDataType.number),
-        ReusableDatagridFieldDefinition(fieldName: string(Item$.storage), columnName: null, dataType: FilterDataType.number),
-      ],
-      itemSortFilterFields: itemSortFilterFields,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Sort List Example"),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ResusableDatagridW(
+              data: originalData,
+              fields: [
+                ReusableDatagridFieldDefinition(fieldName: string(Item$.name), columnName: "Name", dataType: FilterDataType.string),
+                ReusableDatagridFieldDefinition(fieldName: string(Item$.price), columnName: null, dataType: FilterDataType.number),
+                ReusableDatagridFieldDefinition(fieldName: string(Item$.ram), columnName: null, dataType: FilterDataType.number),
+                ReusableDatagridFieldDefinition(fieldName: string(Item$.storage), columnName: null, dataType: FilterDataType.number),
+              ],
+              itemSortFilterFields: itemSortFilterFields,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

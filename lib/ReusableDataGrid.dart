@@ -83,49 +83,39 @@ class _ResusableDatagridW<T> extends State<ResusableDatagridW<T>> {
   Widget build(BuildContext context) {
     var container = SortableFilterableContainer(sortedFields, filteredFields, setSortedFields, setFilteredFields, showFilter, onShowFilter);
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Sort List Example"),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: MeasureSize(
-                onChange: (size) {
-                  onSizeChange(size);
-                },
-                child: PaginatedDataTable(
-                  dataRowHeight: rowHeight.toDouble(),
-                  source: DTS(data.toList(), widget.fields),
-                  headingRowHeight: showFilter ? 77 : 45,
-                  rowsPerPage: rowsPerPage,
-                  columns: [
-                    DataColumn(
-                      label: InkWell(
-                        child: Icon(
-                          FontAwesomeIcons.search,
-                          color: filteredFields.length == 0 ? Colors.black : Colors.blue,
-                          size: filteredFields.length == 0 ? 10 : 15,
-                        ),
-                        onTap: container.onShowFilter,
-                      ),
-                    ),
-                    ...widget.fields
-                        .map((e) => DataColumn(
-                              label: SortableFilterable(
-                                container,
-                                e.fieldName,
-                                e.dataType,
-                                buttonText: e.columnName,
-                              ),
-                            ))
-                        .toList(),
-                  ],
-                ),
+    return MeasureSize(
+      onChange: (size) {
+        onSizeChange(size);
+      },
+      child: PaginatedDataTable(
+        dataRowHeight: rowHeight.toDouble(),
+        source: DTS(data.toList(), widget.fields),
+        headingRowHeight: showFilter ? 77 : 45,
+        rowsPerPage: rowsPerPage,
+        columns: [
+          DataColumn(
+            label: InkWell(
+              child: Icon(
+                FontAwesomeIcons.search,
+                color: filteredFields.length == 0 ? Colors.black : Colors.blue,
+                size: filteredFields.length == 0 ? 10 : 15,
               ),
-            )
-          ],
-        ));
+              onTap: container.onShowFilter,
+            ),
+          ),
+          ...widget.fields
+              .map((e) => DataColumn(
+                    label: SortableFilterable(
+                      container,
+                      e.fieldName,
+                      e.dataType,
+                      buttonText: e.columnName,
+                    ),
+                  ))
+              .toList(),
+        ],
+      ),
+    );
   }
 }
 
