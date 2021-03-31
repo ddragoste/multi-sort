@@ -18,7 +18,13 @@ extension MultiSort<T> on Iterable<SortFilterableItem<T>> {
       var valueA = a.getField(sortedFields[i].fieldName);
       var valueB = b.getField(sortedFields[i].fieldName);
 
+      if (valueA == null && valueB == null) //
+        return 0;
+
       if (valueA == null) //
+        return 1;
+
+      if (valueB == null) //
         return -1;
 
       int result;

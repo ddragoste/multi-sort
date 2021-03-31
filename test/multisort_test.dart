@@ -20,6 +20,21 @@ Map<String, Comparable?> itemSortFilterFields(Phone phone) => {
       'ram': phone.ram,
     };
 
+class NullablePhone {
+  final String name;
+  final int? ram;
+
+  NullablePhone(this.name, this.ram);
+
+  String toString() => //
+      "name: ${this.name}, ram: ${this.ram}";
+}
+
+Map<String, Comparable?> itemSortFilterFields2(NullablePhone phone) => {
+      'name': phone.name,
+      'ram': phone.ram,
+    };
+
 void main() {
   group("multiSort", () {
 //    List<Phone> unsorted;
@@ -68,6 +83,28 @@ void main() {
         Phone("b", 1),
         Phone("b", 128),
         Phone("a", 64),
+      ];
+
+      expect(sorted.toString(), expected.toString());
+    });
+
+    test("sorting on nulls", () {
+      var originalList = [
+        NullablePhone("b", null),
+        NullablePhone("b", 128),
+        NullablePhone("a", null),
+      ];
+      var list = originalList.map((e) => SortFilterableItem(e, itemSortFilterFields2));
+
+      var sortedFields = <SortField>[
+        SortField('ram', isAscending: false),
+        SortField('name', isAscending: false),
+      ];
+      var sorted = list.multisort(sortedFields).toList();
+      var expected = [
+        NullablePhone("b", 128),
+        NullablePhone("b", null),
+        NullablePhone("a", null),
       ];
 
       expect(sorted.toString(), expected.toString());
