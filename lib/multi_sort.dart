@@ -1,5 +1,7 @@
 library multi_sort;
 
+import 'dart:core';
+
 import 'package:dartx/dartx.dart';
 
 import 'common.dart';
@@ -30,11 +32,15 @@ extension MultiSort<T> on Iterable<SortFilterableItem<T>> {
   SortedList<SortFilterableItem<T>> sortedByField(SortField field) {
     if (field.isAscending) {
       return sortedBy(
-        (item) => item.sortFilterFields(item.value)[field.fieldName]!,
+        (item) => _NullableComparator(
+          item.sortFilterFields(item.value)[field.fieldName],
+        ),
       );
     } else {
       return sortedByDescending(
-        (item) => item.sortFilterFields(item.value)[field.fieldName]!,
+        (item) => _NullableComparator(
+          item.sortFilterFields(item.value)[field.fieldName],
+        ),
       );
     }
   }
@@ -44,12 +50,47 @@ extension SortableByField<T> on SortedList<SortFilterableItem<T>> {
   SortedList<SortFilterableItem<T>> thenByField(SortField field) {
     if (field.isAscending) {
       return thenBy(
-        (item) => item.sortFilterFields(item.value)[field.fieldName]!,
+        (item) => _NullableComparator(
+          item.sortFilterFields(item.value)[field.fieldName],
+        ),
       );
     } else {
       return thenByDescending(
-        (item) => item.sortFilterFields(item.value)[field.fieldName]!,
+        (item) => _NullableComparator(
+          item.sortFilterFields(item.value)[field.fieldName],
+        ),
       );
     }
+  }
+}
+
+class _NullableComparator implements Comparable<dynamic> {
+  final Comparable<dynamic>? value;
+
+  _NullableComparator(this.value);
+
+  @override
+  int compareTo(dynamic other) {
+    if (value == null && other == null) {
+      return 0;
+    }
+
+    if (other is _NullableComparator) {
+      other = other.value;
+    }
+
+    if (other == null) {
+      return 1;
+    }
+
+    if (value == null) {
+      return -1;
+    }
+
+    if (other is _NullableComparator) {
+      other = other.value;
+    }
+
+    return value!.compareTo(other);
   }
 }

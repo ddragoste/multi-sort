@@ -89,7 +89,7 @@ void main() {
       expect(sorted.toString(), expected.toString());
     });
 
-    test("sorting on nulls", () {
+    test("sorting on nulls descending", () {
       var originalList = [
         NullablePhone("b", null),
         NullablePhone("b", 128),
@@ -107,6 +107,29 @@ void main() {
         NullablePhone("b", 128),
         NullablePhone("b", null),
         NullablePhone("a", null),
+      ];
+
+      expect(sorted.toString(), expected.toString());
+    });
+
+    test("sorting on nulls ascending", () {
+      var originalList = [
+        NullablePhone("b", null),
+        NullablePhone("b", 128),
+        NullablePhone("a", null),
+      ];
+      var list =
+          originalList.map((e) => SortFilterableItem(e, itemSortFilterFields2));
+
+      var sortedFields = <SortField>[
+        SortField('name', isAscending: true),
+        SortField('ram', isAscending: true),
+      ];
+      var sorted = list.sortedByFields(sortedFields).toList();
+      var expected = [
+        NullablePhone("a", null),
+        NullablePhone("b", null),
+        NullablePhone("b", 128),
       ];
 
       expect(sorted.toString(), expected.toString());
