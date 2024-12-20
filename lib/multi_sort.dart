@@ -21,7 +21,7 @@ extension MultiSort<T> on Iterable<SortFilterableItem<T>> {
       sortedFields.first,
     );
     sortedFields.skip(1).forEach((sortField) {
-      sortedList.thenByField(sortField);
+      sortedList = sortedList.thenByField(sortField);
     });
 
     return sortedList;
