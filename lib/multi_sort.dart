@@ -1,5 +1,7 @@
 library multi_sort;
 
+import 'package:dartx/dartx.dart';
+
 import 'common.dart';
 
 class SortField {
@@ -10,50 +12,44 @@ class SortField {
 }
 
 extension MultiSort<T> on Iterable<SortFilterableItem<T>> {
-  Iterable<SortFilterableItem<T>> multisort(List<SortField> sortedFields) {
-    if (sortedFields.length == 0) //
+  Iterable<SortFilterableItem<T>> sortedByFields(List<SortField> sortedFields) {
+    if (sortedFields.length == 0) {
       return this;
-
-    int compare(int i, SortFilterableItem<T> a, SortFilterableItem<T> b) {
-      var valueA = a.getField(sortedFields[i].fieldName);
-      var valueB = b.getField(sortedFields[i].fieldName);
-
-      if (valueA == null && valueB == null) //
-        return 0;
-
-      if (valueA == null) //
-        return 1;
-
-      if (valueB == null) //
-        return -1;
-
-      int result;
-      if (valueA is String && valueB is String) //
-        result = valueA.toUpperCase().compareTo(valueB.toUpperCase());
-      else //
-        result = valueA.compareTo(valueB);
-
-      if (!sortedFields[i].isAscending) //
-        return result * -1;
-
-      return result;
     }
 
-    int sortall(a, b) {
-      int i = 0;
-      late int result;
-      while (i < sortedFields.length) {
-        result = compare(i, a, b);
-        if (result != 0) break;
-        i++;
-      }
-      return result;
+    SortedList<SortFilterableItem<T>> sortedList = sortedByField(
+      sortedFields.first,
+    );
+    sortedFields.skip(1).forEach((sortField) {
+      sortedList.thenByField(sortField);
+    });
+
+    return sortedList;
+  }
+
+  SortedList<SortFilterableItem<T>> sortedByField(SortField field) {
+    if (field.isAscending) {
+      return sortedBy(
+        (item) => item.sortFilterFields(item.value)[field.fieldName]!,
+      );
+    } else {
+      return sortedByDescending(
+        (item) => item.sortFilterFields(item.value)[field.fieldName]!,
+      );
     }
+  }
+}
 
-    final list = this.toList();
-
-    list.sort((a, b) => sortall(a, b));
-
-    return list;
+extension SortableByField<T> on SortedList<SortFilterableItem<T>> {
+  SortedList<SortFilterableItem<T>> thenByField(SortField field) {
+    if (field.isAscending) {
+      return thenBy(
+        (item) => item.sortFilterFields(item.value)[field.fieldName]!,
+      );
+    } else {
+      return thenByDescending(
+        (item) => item.sortFilterFields(item.value)[field.fieldName]!,
+      );
+    }
   }
 }
