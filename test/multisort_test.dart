@@ -44,14 +44,15 @@ void main() {
       Phone("b", 128),
       Phone("a", 64),
     ];
-    var list = originalList.map((e) => SortFilterableItem(e, itemSortFilterFields));
+    var list =
+        originalList.map((e) => SortFilterableItem(e, itemSortFilterFields));
 
     test("two asc", () {
       var sortedFields = [
         SortField('ram'),
         SortField('name'),
       ];
-      var sorted = list.multisort(sortedFields).toList();
+      var sorted = list.sortedByFields(sortedFields).toList();
       var expected = [
         Phone("b", 1),
         Phone("a", 64),
@@ -66,7 +67,7 @@ void main() {
         SortField('name'),
         SortField('ram', isAscending: false),
       ];
-      var sorted = list.multisort(sortedFields).toList();
+      var sorted = list.sortedByFields(sortedFields).toList();
       var expected = [
         Phone("a", 64),
         Phone("b", 128),
@@ -78,7 +79,7 @@ void main() {
 
     test("sort set to null", () {
       var sortedFields = <SortField>[];
-      var sorted = list.multisort(sortedFields).toList();
+      var sorted = list.sortedByFields(sortedFields).toList();
       var expected = [
         Phone("b", 1),
         Phone("b", 128),
@@ -94,13 +95,14 @@ void main() {
         NullablePhone("b", 128),
         NullablePhone("a", null),
       ];
-      var list = originalList.map((e) => SortFilterableItem(e, itemSortFilterFields2));
+      var list =
+          originalList.map((e) => SortFilterableItem(e, itemSortFilterFields2));
 
       var sortedFields = <SortField>[
         SortField('ram', isAscending: false),
         SortField('name', isAscending: false),
       ];
-      var sorted = list.multisort(sortedFields).toList();
+      var sorted = list.sortedByFields(sortedFields).toList();
       var expected = [
         NullablePhone("b", 128),
         NullablePhone("b", null),

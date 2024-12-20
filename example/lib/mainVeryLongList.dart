@@ -1,8 +1,7 @@
-import 'package:adi_helpers/enumH.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_sort/FilterBox.dart';
-import 'package:multi_sort/ReusableDataGrid.dart';
 import 'package:multi_sort/common.dart';
+import 'package:multi_sort/data_grid_widget.dart';
+import 'package:multi_sort/filter_box.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,22 +22,37 @@ class Item {
   int price;
   int storage;
 
-  Item(this.name, this.ram, this.price, this.storage);
+  Item(
+    this.name,
+    this.ram,
+    this.price,
+    this.storage,
+  );
 }
 
-enum Item$ { name, ram, price, storage }
+enum Item$ {
+  name,
+  ram,
+  price,
+  storage,
+}
 
-SortFilterFields_fn<Item> itemSortFilterFields = (item) => {
-      string(Item$.name): item.name,
-      string(Item$.ram): item.ram,
-      string(Item$.price): item.price,
-      string(Item$.storage): item.storage,
+SortFilterFieldsFn<Item> itemSortFilterFields = (item) => {
+      Item$.name.name: item.name,
+      Item$.ram.name: item.ram,
+      Item$.price.name: item.price,
+      Item$.storage.name: item.storage,
     };
 
 var originalData = List<Item>.generate(
-    2000,
-    (i) => //
-        Item("id: $i", i * 2, i ~/ 2, i + 500));
+  2000,
+  (i) => Item(
+    "id: $i",
+    i * 2,
+    i ~/ 2,
+    i + 500,
+  ),
+);
 
 class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -49,13 +63,29 @@ class ExampleApp extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ResusableDatagridW<Item>(
+            child: DataGridWidget<Item>(
               data: originalData,
               fields: [
-                ReusableDatagridFieldDefinition(fieldName: string(Item$.name), columnName: "Name", dataType: FilterDataType.string),
-                ReusableDatagridFieldDefinition(fieldName: string(Item$.price), columnName: null, dataType: FilterDataType.number),
-                ReusableDatagridFieldDefinition(fieldName: string(Item$.ram), columnName: null, dataType: FilterDataType.number),
-                ReusableDatagridFieldDefinition(fieldName: string(Item$.storage), columnName: null, dataType: FilterDataType.number),
+                DataGridFieldDefinition(
+                  fieldName: Item$.name.name,
+                  columnName: "Name",
+                  dataType: FilterDataType.string,
+                ),
+                DataGridFieldDefinition(
+                  fieldName: Item$.price.name,
+                  columnName: null,
+                  dataType: FilterDataType.number,
+                ),
+                DataGridFieldDefinition(
+                  fieldName: Item$.ram.name,
+                  columnName: null,
+                  dataType: FilterDataType.number,
+                ),
+                DataGridFieldDefinition(
+                  fieldName: Item$.storage.name,
+                  columnName: null,
+                  dataType: FilterDataType.number,
+                ),
               ],
               itemSortFilterFields: itemSortFilterFields,
             ),
